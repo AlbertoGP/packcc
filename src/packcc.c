@@ -702,13 +702,13 @@ static bool_t unescape_string(char *str, bool_t cls) { /* cls: TRUE if used for 
                     char s = 0, c;
                     size_t k;
                     for (k = 0; k < 2; k++) {
-                        char d;
+                        int d;
                         c = str[i + k + 1];
                         d = (c >= '0' && c <= '9') ? c - '0' :
                             (c >= 'a' && c <= 'f') ? c - 'a' + 10 :
                             (c >= 'A' && c <= 'F') ? c - 'A' + 10 : -1;
                         if (d < 0) break;
-                        s = (s << 4) | d;
+                        s = (s << 4) | (char) d;
                     }
                     if (k < 2) {
                         const size_t l = i + k;
@@ -728,13 +728,13 @@ static bool_t unescape_string(char *str, bool_t cls) { /* cls: TRUE if used for 
                     char c;
                     size_t k;
                     for (k = 0; k < 4; k++) {
-                        char d;
+                        int d;
                         c = str[i + k + 1];
                         d = (c >= '0' && c <= '9') ? c - '0' :
                             (c >= 'a' && c <= 'f') ? c - 'a' + 10 :
                             (c >= 'A' && c <= 'F') ? c - 'A' + 10 : -1;
                         if (d < 0) break;
-                        s = (s << 4) | d;
+                        s = (s << 4) | (char) d;
                     }
                     if (k < 4 || (s & 0xfc00) == 0xdc00) { /* invalid character or invalid surrogate code point */
                         const size_t l = i + k;
@@ -754,12 +754,12 @@ static bool_t unescape_string(char *str, bool_t cls) { /* cls: TRUE if used for 
                                 if (c != 'u') break;
                             }
                             else {
-                                const char d =
+                                const int d =
                                     (c >= '0' && c <= '9') ? c - '0' :
                                     (c >= 'a' && c <= 'f') ? c - 'a' + 10 :
                                     (c >= 'A' && c <= 'F') ? c - 'A' + 10 : -1;
                                 if (d < 0) break;
-                                t = (t << 4) | d;
+                                t = (t << 4) | (char) d;
                             }
                         }
                         if (k < 10 || (t & 0xfc00) != 0xdc00) { /* invalid character or invalid surrogate code point */
