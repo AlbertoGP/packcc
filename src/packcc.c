@@ -37,6 +37,7 @@
 #endif
 #endif
 
+#define _POSIX_C_SOURCE 200809L /* Get strnlen from <string.h>. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -535,7 +536,7 @@ static size_t count_indent_spaces(const char *str, size_t start, size_t end, siz
             n++;
             break;
         case '\t':
-            n = (n + 8) & ~7;
+            n = (n + 8) & ~7u;
             break;
         default:
             if (next) *next = i;
@@ -1277,7 +1278,7 @@ static const char *extract_fileext(const char *path) {
 
 static char *replace_fileext(const char *path, const char *ext) {
     const char *const p = extract_fileext(path);
-    const size_t m = p - path;
+    const size_t m = (size_t)(p - path);
     const size_t n = strlen(ext);
     char *const s = (char *)malloc_e(m + n + 2);
     memcpy(s, path, m);
@@ -2939,7 +2940,7 @@ static bool_t parse_directive_string_(input_state_t *input, const char *name, ch
             bool_t b = TRUE;
             remove_leading_blanks(s);
             remove_trailing_blanks(s);
-            assert((mode & ~7) == 0);
+            assert((mode & ~7u) == 0);
             if ((mode & STRING_FLAG__NOTEMPTY) && !is_filled_string(s)) {
                 print_error("%s:" FMT_LU ":" FMT_LU ": Empty string\n", input->path, (ulong_t)(lv + 1), (ulong_t)(mv + 1));
                 input->errnum++;
